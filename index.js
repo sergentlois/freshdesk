@@ -11,6 +11,6 @@ app.use(bodyParser.json());
 dotenv.config({path: './.env'});
 
 
-app.use('/tickets/', freshRoute)
+app.use('/freshdesk/', freshRoute)
 
 app.listen(2500, () => {console.log("Server Started: 2500")})
