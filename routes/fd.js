@@ -1,20 +1,22 @@
 const express = require("express");
 const Freshdesk = require("freshdesk-api");
+const dotenv = require('dotenv');
+dotenv.config({path: './.env'});
+
+
 const freshdesk = new Freshdesk(
-  "https://krrsbc.freshdesk.com",
-  "QGwgYt5UwzwPrAZ7zVeC"
+    process.env.DOMAIN,
+    process.env.API_KEY
 );
-const Promise = require("bluebird");
-var asyncFreshdesk = Promise.promisifyAll(
-	new Freshdesk("https://krrsbc.freshdesk.com", "QGwgYt5UwzwPrAZ7zVeC")
-);
+
 
 
 const ticketRouter = express.Router();
 
-ticketRouter.get('/countopentix', (req,res) =>{
+ticketRouter.get('/countopen', (req,res) =>{
     console.log(req.query)
     //param sample requester_id=48004281278&include=stats&order_by=status&order_type=desc
+    
 
     freshdesk.listAllTickets(req.query, function(err, data, extra) {
         if (err){
@@ -85,21 +87,6 @@ ticketRouter.get('/view', (req,res) =>{
       });
 });
 
-
-ticketRouter.get('/allcontact', (req,res) => {
-    asyncFreshdesk.getTicketAsync(21)
-    .then((data, extra) => {
-        console.log(data, extra)
-    })
-
-    .catch(Freshdesk.FreshdeskError, err => {
-        // typed `catch` exists only in bluebird
-
-        console.log('ERROR OCCURED', err)
-    })
-
-})
-
 ticketRouter.get('/contact', (req, res) => {
 
     console.log(req.query)
@@ -110,9 +97,9 @@ ticketRouter.get('/contact', (req, res) => {
 
         
 
-        for(let key of Object.values(data)){
+       /*  for(let key of Object.values(data)){
             console.log(key.email);
-        }
+        } */
         
         /* 
         var keys = [];
@@ -128,7 +115,7 @@ ticketRouter.get('/contact', (req, res) => {
             console.log(keys); */
         res.status(200).json({data: data});
       });
-})
+});
 
 
 module.exports = ticketRouter;
